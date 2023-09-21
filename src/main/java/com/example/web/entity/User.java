@@ -1,8 +1,10 @@
 package com.example.web.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,6 +17,10 @@ public class User {
     private String name;
     private String email;
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Post> posts = new ArrayList<>();
+
     public long getId() {
         return id;
     }
@@ -23,8 +29,7 @@ public class User {
         this.id = id;
     }
 
-    @OneToMany(mappedBy = "user")
-    private List<Post> posts;
+
     private LocalDate localDate;
 
     public String getName() {

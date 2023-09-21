@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -19,8 +20,14 @@ public class PostController {
     @Autowired
     private UserRepository userRepository;
 
+    @GetMapping
+    public List<Post> get()
+    {
+        return postRepository.findAll();
+    }
+
     @PostMapping("/{userId}")
-    public ResponseEntity<String> createPost(@PathVariable Long userId, @RequestBody Post post) {
+    public ResponseEntity<String> createPost(@PathVariable("userId") Long userId, @RequestBody Post post) {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();

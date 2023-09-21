@@ -19,38 +19,38 @@ public class UserController
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private PostRepository postRepository;
+//    @Autowired
+//    private PostRepository postRepository;
 
     //@RequestMapping(method = RequestMethod.GET.path)
-    @GetMapping("/first")
+    @GetMapping
     public List<User> get()
     {
         return userRepository.findAll();
     }
 
-    @PostMapping("/second")
+    @PostMapping
     //public User create(@RequestBody User user)
     public User create(@RequestBody User user)
     {
        return userRepository.save(user);
     }
 
-    @GetMapping("/third/{id}")
+    @GetMapping("/{id}")
     public User getById(@PathVariable("id") Long id)
     {
         Optional<User> user= userRepository.findById(id);
         return user.get();
     }
 
-    @DeleteMapping("/fourth/{id}")
+    @DeleteMapping("/{id}")
     public String deleteById(@PathVariable("id") Long id)
     {
             userRepository.deleteById(id);
             return "deleted";
     }
 
-    @GetMapping("/{userId}/posts")
+    @GetMapping("/posts/{userId}")
     public List<Post> getUserPosts(@PathVariable Long userId) throws ResourceNotFoundException {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()) {
