@@ -54,18 +54,10 @@ public class UserController
             return "deleted";
     }
 
-    @GetMapping("/posts/{userId}")
-    public List<Post> getUserPosts(@PathVariable Long userId) throws ResourceNotFoundException {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            return user.getPosts();
-        }
-        throw new ResourceNotFoundException("User not found with ID: " + userId);
-    }
 
 
-    @PutMapping("/update/{id}")
+
+    @PutMapping("/{id}")
     public ResponseEntity<String> update(@RequestBody User userInfo, @PathVariable("id") long id)
     {
         Optional<User> userOptional = userRepository.findById(id);
