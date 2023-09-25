@@ -2,6 +2,7 @@ package com.example.web.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,10 +13,19 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    //@Column(name = "id",nullable = false)
+    @Column(name = "id",nullable = false)
+    @ColumnDefault("'1'")
     private long id;
+    @Column(name = "name",nullable = false)
+    @ColumnDefault("'user'")
     private String name;
+    @Column(name = "email",nullable = false)
+    @ColumnDefault("'user@gmail.com'")
     private String email;
+
+    @Column(name = "date",nullable = false)
+    @ColumnDefault("'2023-09-22'")
+    private LocalDate localDate;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -30,7 +40,7 @@ public class User {
     }
 
 
-    private LocalDate localDate;
+
 
     public String getName() {
         return name;

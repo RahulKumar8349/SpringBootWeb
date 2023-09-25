@@ -29,26 +29,30 @@ public class PostController {
 
 
     @GetMapping("/{userId}/posts")
-    public List<Post> getUserPosts(@PathVariable Long userId) throws ResourceNotFoundException {
+    public ResponseEntity<Object> getUserPosts(@PathVariable Long userId) throws ResourceNotFoundException
+    {
         Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isPresent()) {
+        if(userOptional.isPresent())
+        {
             User user = userOptional.get();
-            return user.getPosts();
+            return ResponseEntity.ok().body(user.getPosts());
         }
-        throw new ResourceNotFoundException("User not found with ID: " + userId);
+        return ResponseEntity.ok().body("There is no User id : "+userId+" exist , which you given to find its Posts");
     }
 
     @GetMapping("/{userId}/posts/{postId}")
-    public ResponseEntity<Post> createPost(@PathVariable("userId") Long userId,@PathVariable("postId") Long postId)
+    public ResponseEntity<Object> createPost(@PathVariable("userId") Long userId,@PathVariable("postId") Long postId)
     {
         Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isPresent())
+        if(userOptional.isPresent())
         {
             Optional<Post> post=postRepository.findById(postId);
             if(post.isPresent())
                 return ResponseEntity.ok(post.get());
+            else
+                return ResponseEntity.ok().body("There is no Posts of id : "+postId+" exist , which you given to find its Posts in userId : "+userId);
         }
-            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().body("There is no User id : "+userId+" exist , which you given to find its Posts");
     }
 
     @PostMapping("/{userId}/posts")
@@ -56,11 +60,16 @@ public class PostController {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
+
+            if(post.getContent()==null )
+            {
+                return ResponseEntity.ok().body("Post in not saved in database because content cannot be null ");
+            }
             post.setUser(user);
             postRepository.save(post);
             return ResponseEntity.ok("Post created successfully.");
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok("user not exist of id "+userId);
         }
     }
 

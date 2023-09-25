@@ -21,8 +21,7 @@ public class UserService {
             userRepository.save(user);
             return "data updated successfully";
         }
-
-        return " Please provide email , name and local date with valid id in url then try to update";
+            return " Please provide email , name and local date with valid id in url then try to update";
 
     }
 }

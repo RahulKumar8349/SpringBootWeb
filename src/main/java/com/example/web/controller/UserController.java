@@ -35,23 +35,41 @@ public class UserController
 
     @PostMapping
     //public User create(@RequestBody User user)
-    public User create(@RequestBody User user)
+    public ResponseEntity<Object> create(@RequestBody User user)
     {
-       return userRepository.save(user);
+        if(user.getName()==null || user.getEmail()==null || user.getLocalDate()==null)
+        {
+            return ResponseEntity.ok().body("User in not saved in database because , name ,email,localdate must be provided these cannot be null and id is auto generated ");
+        }
+        else
+        {
+            return ResponseEntity.ok().body(userRepository.save(user));
+        }
+
     }
 
     @GetMapping("/{id}")
-    public User getById(@PathVariable("id") Long id)
+    public ResponseEntity<Object> getById(@PathVariable("id") Long id)
     {
-        Optional<User> user= userRepository.findById(id);
-        return user.get();
+        Optional<User> userOptional = userRepository.findById(id);
+        if(userOptional.isPresent())
+        {
+            return ResponseEntity.ok().body(userOptional.get());
+        }
+
+        return ResponseEntity.ok().body("There is no User of id exist , which you given");
     }
 
     @DeleteMapping("/{id}")
-    public String deleteById(@PathVariable("id") Long id)
+    public ResponseEntity<Object> deleteById(@PathVariable("id") Long id)
     {
+        Optional<User> userOptional = userRepository.findById(id);
+        if(userOptional.isPresent())
+        {
             userRepository.deleteById(id);
-            return "deleted";
+            return ResponseEntity.ok().body("User is deleted of id : "+id);
+        }
+        return ResponseEntity.ok().body("There is no User of id exist , which you given");
     }
 
 
@@ -64,6 +82,7 @@ public class UserController
         if(userOptional.isPresent())
         {
             User user = userOptional.get();
+
             try {
                 String ans=this.userService.update(user,userInfo,id);
                 return ResponseEntity.ok().body(ans);
@@ -72,7 +91,7 @@ public class UserController
             }
         }
 
-        return ResponseEntity.ok().body("There is no id exist , which you given");
+        return ResponseEntity.ok().body("There is no id exist , which you given : "+id);
 
     }
 
